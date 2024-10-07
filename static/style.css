@@ -1,0 +1,124 @@
+/* Global styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.chat-container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+/* Header styles */
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Upload form styles */
+.upload-form {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.upload-form input[type="file"] {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.upload-form button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+	margin: 5px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.upload-form button:hover {
+    background-color: #2980b9;
+}
+
+/* Chat box */
+#chat {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    background-color: #fafafa;
+}
+
+.message {
+    margin: 5px 0;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.user-message {
+    background-color: #3498db;
+    color: white;
+    text-align: right;
+    float: right;
+}
+
+.bot-message {
+    background-color: #e0e0e0;
+    color: black;
+    text-align: left;
+    float: left;
+}
+
+/* Input and button */
+.input-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+textarea {
+    width: 80%;
+    height: 80px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.send-btn {
+    width: 18%;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+	margin: 5px;
+    transition: background-color 0.2s;
+}
+
+.send-btn:hover {
+    background-color: #219150;
+}
+
+/* Loading (Bot is typing) */
+.loading {
+    text-align: left;
+    color: gray;
+    font-style: italic;
+    margin: 10px 0;
+    padding-left: 10px;
+}
