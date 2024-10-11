@@ -58,6 +58,31 @@ function formatToNC() {
     reader.readAsText(file);
 }
 
+function skill_matrix() {
+    const fileInput = document.getElementById('resumeFile');
+    if (fileInput.files.length === 0) {
+        alert("Please upload a resume first.");
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const resumeText = e.target.result;
+        showLoading();
+        fetch('/skill_matrix', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ resumeText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            appendMessage(data.response, "bot");
+        });
+    };
+    reader.readAsText(file);
+}
 
 function changeTense() {
     const fileInput = document.getElementById('resumeFile');
