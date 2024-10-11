@@ -100,7 +100,15 @@ def change_tense():
 def skill_matrix():
     print("Skill Matrix route accessed!")
     global resume_context
-    user_message = "Set of Skills will be provided in the next prompt. give the years of experience in the table and explain in the following paragraph. Number Should be strictly based on the resume content."
+    user_message = "Set of Skills will be provided in the next prompt. Calculate the candidate's years of experience strictly based on the resume. And answer in the following format
+Skill 1   Year
+Skill 2   Year
+etc...
+
+Skill 1: Years of experience explanation.
+Skill 2: Years of experience explanation.
+etc...
+"
     response = query_resume(user_message)
     return jsonify({"response": response})
 
@@ -116,8 +124,8 @@ def format_to_nc():
         # Use Gemini AI to format the resume
     user_message = f"""
     Please format the following resume content to NC style, while formatting follow the rules below:
-     1. The Government Experience section aims to glimpse the candidates relevant government experience.
-     2. In the Employment History section, candidates full experience should be listed in the descending chronological order. Including government experience.
+     1. The Government Experience section aims to glimpse the candidate's relevant government experience.
+     2. In the Employment History section, candidates' full experience should be listed in descending chronological order. Including government experience.
      3. You can rearrange the resume but do not add, remove, or modify any text content. Don't try to correct grammar erorrs, even if you find any.
 
     {resume_content}
