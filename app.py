@@ -100,7 +100,8 @@ def change_tense():
 def skill_matrix():
     print("Skill Matrix route accessed!")
     global resume_context
-    user_message = "Set of Skills will be provided in the next prompt. Calculate the candidate's years of experience strictly based on the resume. And answer in the following format
+    user_message = f"""
+A set of Skills will be provided in the next prompt. Calculate the candidate's years of experience strictly based on the resume. Answer in the following format.
 Skill 1   Year
 Skill 2   Year
 etc...
@@ -108,7 +109,7 @@ etc...
 Skill 1: Years of experience explanation.
 Skill 2: Years of experience explanation.
 etc...
-"
+"""
     response = query_resume(user_message)
     return jsonify({"response": response})
 
