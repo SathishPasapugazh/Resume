@@ -101,11 +101,14 @@ def skill_matrix():
     print("Skill Matrix route accessed!")
     global resume_context
     user_message = f"""
-A set of Skills will be provided in the next prompt. Calculate the candidate's years of experience strictly based on the resume. Answer in the following format.
-Skill 1   Year
-Skill 2   Year
+A list of skills will be provided in the next prompt. Based solely on the resume, calculate the candidate's years of experience for each skill. If the candidate has no experience with a skill, indicate 'NA'. Respond using the following format.
+
+Years of Experience
+Skill 1   Years
+Skill 2   Years
 etc...
 
+Explanation
 Skill 1: Years of experience explanation.
 Skill 2: Years of experience explanation.
 etc...
