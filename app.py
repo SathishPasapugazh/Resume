@@ -88,6 +88,15 @@ def chat():
     return jsonify({"response": response})
 
 
+@app.route("/change_tense", methods=["POST"])
+def change_tense():
+    print("Change Past tense route accessed!")
+    global resume_context
+    user_message = "Convert all listed responsibilities to past tense. Do not make any other changes."
+    response = query_resume(user_message)
+    return jsonify({"response": response})
+
+
 @app.route("/format_to_nc", methods=["POST"])
 def format_to_nc():
     print("Format to NC route accessed!")
@@ -178,4 +187,4 @@ if __name__ == "__main__":
         os.makedirs(UPLOAD_PATH)
     if not os.path.exists(ARCHIVE_PATH):
         os.makedirs(ARCHIVE_PATH)
-    app.run(host="0.0.0.0", debug=False)  # Start the server on port 8000
+    app.run(port=8000, debug=True)  # Start the server on port 8000
