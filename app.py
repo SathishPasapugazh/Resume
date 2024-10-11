@@ -96,6 +96,14 @@ def change_tense():
     response = query_resume(user_message)
     return jsonify({"response": response})
 
+@app.route("/skill_matrix", methods=["POST"])
+def skill_matrix():
+    print("Skill Matrix route accessed!")
+    global resume_context
+    user_message = "Set of Skills will be provided in the next prompt. give the years of experience in the table and explain in the following paragraph"
+    response = query_resume(user_message)
+    return jsonify({"response": response})
+
 
 @app.route("/format_to_nc", methods=["POST"])
 def format_to_nc():
