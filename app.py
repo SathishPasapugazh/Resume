@@ -100,7 +100,7 @@ def change_tense():
 def skill_matrix():
     print("Skill Matrix route accessed!")
     global resume_context
-    user_message = "Set of Skills will be provided in the next prompt. give the years of experience in the table and explain in the following paragraph"
+    user_message = "Set of Skills will be provided in the next prompt. give the years of experience in the table and explain in the following paragraph. Number Should be strictly based on the resume content."
     response = query_resume(user_message)
     return jsonify({"response": response})
 
