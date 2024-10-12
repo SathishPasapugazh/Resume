@@ -31,6 +31,23 @@ function uploadResume() {
     });
 }
 
+function shortenJd() {
+        showLoading();
+        fetch('/shorten_jd', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ resumeText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            appendMessage(data.response, "bot");
+        });
+    };
+    reader.readAsText(file);
+}
+
+
 // Function to format resume to NC style
 function formatToNC() {
     const fileInput = document.getElementById('resumeFile');
