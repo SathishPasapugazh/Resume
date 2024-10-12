@@ -77,6 +77,17 @@ def upload_resume():
     return jsonify({"response": response})
 
 
+@app.route("/jd", methods=["POST"])
+def jd():
+    print("Job Description route accessed!")
+    global resume_context
+    data = request.get_json()
+    user_message = data['message']
+
+    response = query_resume(user_message)
+    return jsonify({"response": response})
+
+
 @app.route("/chat", methods=["POST"])
 def chat():
     print("Chat route accessed!")
