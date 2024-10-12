@@ -17,8 +17,8 @@ resume_content = ""
 resume_context = []  # List to store resume content and other files
 
 # Initialize GeminiAI model
-model_name = "gemini-1.5-pro-002"
-your_ai = GeminiAI(model_name=model_name)
+#model_name = "gemini-1.5-pro-002"
+#your_ai = GeminiAI(model_name=model_name)
 
 
 @app.route('/')
@@ -77,13 +77,11 @@ def upload_resume():
     return jsonify({"response": response})
 
 
-@app.route("/jd", methods=["POST"])
-def jd():
-    print("Job Description route accessed!")
-    global resume_context
-    data = request.get_json()
-    user_message = data['message']
-
+@app.route("/short_jd", methods=["POST"])
+def short_jd():
+    print("Short Job Description route accessed!")
+    user_message = f"""
+    A job description will be given in the next prompt. Shorten it as much as possible. Reduce the responsibilities. Keep required, desired, preferred skills and certifications."""
     response = query_resume(user_message)
     return jsonify({"response": response})
 
