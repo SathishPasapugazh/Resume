@@ -110,17 +110,7 @@ def skill_matrix():
     print("Skill Matrix route accessed!")
     global resume_context
     user_message = f"""
-A list of skills will be provided in the next prompt. Based solely on the resume, calculate the candidate's years of experience for each skill. If the candidate has no experience with a skill, indicate 'NA'. Respond using the following format.
-
-Years of Experience
-Skill 1   Years
-Skill 2   Years
-etc...
-
-Explanation
-Skill 1: Years of experience explanation.
-Skill 2: Years of experience explanation.
-etc...
+A list of skills will be provided in the next prompt. Calculate the candidate's years of experience for each skill based solely on the resume. If the candidate has no experience with a skill, indicate 'NA'. Give only years don't give explanations.
 """
     response = query_resume(user_message)
     return jsonify({"response": response})
@@ -139,14 +129,17 @@ def format_to_nc():
     Please format the following resume content to NC style, while formatting follow the rules below:
      1. The Government Experience section aims to glimpse the candidate's relevant government experience.
      2. In the Employment History section, candidates' full experience should be listed in descending chronological order. Including government experience.
-     3. You can rearrange the resume but do not add, remove, or modify any text content. Don't try to correct grammar erorrs, even if you find any.
+     3. You can rearrange the resume but do not add, remove, or modify any text content. Don't try to correct grammar errors, even if you find any.
+     4. Give space before each employment.
+     5. Don't remove any text content from employment history. if it doesn't fit the template leave it as it is.
+     6. Always read these instructions carefully.
 
     {resume_content}
 
     NC style:
     <Candidate Name>
     GOVERNMENT EXPERIENCE (Don't add responsibilities here)
-    •	Company Name, City, State	Mon (first three alphabets) YYYY – Mon (first three alphabets) YYYY
+    •	Company Name, City, State	Mon(first three alphabets) YYYY – Mon(first three alphabets) YYYY
 
     CERTIFICATIONS
     •	Certification 1
@@ -160,10 +153,9 @@ def format_to_nc():
     Responsibilities:
     •	Sample 1
     •	Sample 2
-    Environment/Technologies: tool1, tool2, etc...(if any)
     
     Education
-    •	Degree – University, City, State, Year
+    •	Degree – University, City, State, Passed out year
     """
 
     response = query_resume(user_message)
