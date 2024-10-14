@@ -13,11 +13,13 @@
         <!-- Form to upload resume -->
         <form id="resumeForm" class="upload-form">
             <input type="file" id="resumeFile" name="doc" accept=".pdf,.doc,.docx" />
-            <button type="button" onclick="uploadResume()">Upload Resume</button>
-            <button type="button" onclick="formatToNC()">Format to NC</button>
-	    <button type="button" onclick="changeTense()">Change Past tense</button>
-	    <button type="button" onclick="skillMatrix()">Skill Matrix</button>
-	    <button type="button" onclick="shortenJd()">Shorten JD</button>
+            <div class="button-container">
+                <button type="button" onclick="uploadResume()">Upload Resume</button>
+                <button type="button" onclick="formatToNC()">Format to NC</button>
+                <button type="button" onclick="changeTense()">Change Past Tense</button>
+                <button type="button" onclick="skillMatrix()">Skill Matrix</button>
+                <button type="button" onclick="shortenJd()">Shorten JD</button>
+            </div>
         </form>
 
         <!-- Chat container -->
