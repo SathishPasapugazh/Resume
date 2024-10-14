@@ -25,7 +25,7 @@ class GeminiAI:
     def send_message(self, user_input):
         """Send a message to the AI chat and get a response."""
         if not self.chat:
-            return "Chat session has not been started with resume content."
-
+            # Create a generic session if no resume content is available
+            self.chat = self.model.start_chat(history=[])  # Initialize with an empty history if no resume
         response = self.chat.send_message(user_input)
         return response.text
