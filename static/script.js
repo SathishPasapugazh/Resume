@@ -32,19 +32,18 @@ function uploadResume() {
 }
 
 function shortenJd() {
+        const message = document.getElementById("message").value;
         showLoading();
-        fetch('/shorten_jd', {
+        fetch('/short_jd', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ resumeText })
+            body: JSON.stringify({ message })
         })
         .then(response => response.json())
         .then(data => {
             hideLoading();
             appendMessage(data.response, "bot");
         });
-    };
-    reader.readAsText(file);
 }
 
 
