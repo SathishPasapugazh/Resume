@@ -49,9 +49,10 @@ button {
     padding: 10px 15px;
     font-size: 1em;
     border: none;
-    background-color: #333;
+    background-color: #0084ff;
     color: white;
     cursor: pointer;
+    border-radius: 50px;
     transition: background-color 0.3s ease;
 }
 
@@ -67,16 +68,41 @@ button:hover {
     background-color: white;
     padding: 15px;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 15px;
     margin-bottom: 20px;
 }
 
 .message {
     margin: 10px 0;
     padding: 10px;
-    border-radius: 5px;
-    background-color: #f0f0f0;
+    border-radius: 15px;
+    max-width: 70%;
     word-wrap: break-word;
+    display: flex;
+    align-items: center;
+}
+
+/* User messages aligned to the right */
+.message.user {
+    background-color: #0084ff;
+    color: white;
+    text-align: right;
+    margin-left: auto;  /* Align user messages to the right */
+    border-radius: 15px 15px 0 15px;  /* Rounded corners */
+}
+
+/* Bot messages aligned to the left */
+.message.bot {
+    background-color: #f1f0f0;
+    color: black;
+    text-align: left;
+    margin-right: auto;  /* Align bot messages to the left */
+    border-radius: 15px 15px 15px 0;  /* Rounded corners */
+}
+
+/* Strong element for sender name */
+.message strong {
+    font-weight: bold;
 }
 
 /* Input container for sending messages */
@@ -92,7 +118,7 @@ textarea {
     height: 60px;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 15px 15px 15px 15px;
     resize: none;
 }
 
@@ -100,11 +126,11 @@ textarea {
     padding: 10px 20px;
     margin-left: 10px;
     font-size: 1em;
-    background-color: #333;
+    background-color: #0084ff;
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 50px;
     transition: background-color 0.3s ease;
 }
 
@@ -171,13 +197,4 @@ textarea {
     .send-btn {
         width: 15%;
     }
-}
-
-/* Loading (Bot is typing) */
-.loading {
-    text-align: left;
-    color: gray;
-    font-style: italic;
-    margin: 10px 0;
-    padding-left: 10px;
 }
