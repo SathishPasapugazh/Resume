@@ -1,11 +1,12 @@
 from flask import Flask, request, render_template, jsonify, session
-from docx import Document
+import docx2txt
 from pypdf import PdfReader
 import os
 import shutil
-import mammoth  # Add this for .doc file support
-from resumeparser import process_resume, query_resume  # Import functions from resumeparser.py
-from gemini import GeminiAI  # Import GeminiAI class
+import mammoth
+from resumeparser import process_resume, query_resume
+from gemini import GeminiAI
+import json
 
 UPLOAD_PATH = r"__DATA__"
 ARCHIVE_PATH = r"archived"
@@ -63,7 +64,7 @@ def upload_resume():
     if file_extension == 'pdf':
         resume_content = _read_pdf_from_path(file_path)
     elif file_extension == 'docx':
-        resume_content = _read_docx_from_path(file_path)
+        resume_content = docx2txt.process(file_path)
     elif file_extension == 'doc':
         resume_content = _read_doc_from_path(file_path)  # Handle .doc file using mammoth
     else:
@@ -81,7 +82,7 @@ def upload_resume():
 def short_jd():
     print("Short Job Description route accessed!")
     user_message = f"""
-    A job description will be given in the next prompt. Shorten it as much as possible. Reduce the responsibilities. Keep required, desired, preferred skills and certifications."""
+    A job description will be given in the next prompt. Make it clear and concise. Keep required, desired, preferred skills and certifications."""
     response = query_resume(user_message)
     return jsonify({"response": response})
 
@@ -110,8 +111,7 @@ def skill_matrix():
     print("Skill Matrix route accessed!")
     global resume_context
     user_message = f"""
-A list of skills will be provided in the next prompt. Calculate the candidate's years of experience for each skill based solely on the resume. If the candidate has no experience with a skill, indicate 'NA'. Give only years don't give explanations.
-"""
+A list of skills will be provided in the next prompt. Calculate the candidate's years of experience for each skill based solely on the resume. If the candidate has no experience with a skill, indicate 'NA'. Give only years don't give explanations."""
     response = query_resume(user_message)
     return jsonify({"response": response})
 
@@ -129,33 +129,31 @@ def format_to_nc():
     Please format the following resume content to NC style, while formatting follow the rules below:
      1. The Government Experience section aims to glimpse the candidate's relevant government experience.
      2. In the Employment History section, candidates' full experience should be listed in descending chronological order. Including government experience.
-     3. You can rearrange the resume but do not add, remove, or modify any text content. Don't try to correct grammar errors, even if you find any.
-     4. Give space before each employment.
-     5. Don't remove any text content from employment history. if it doesn't fit the template leave it as it is.
-     6. Always read these instructions carefully.
+     3. You can rearrange the resume but do not add, remove, or modify any text content. Don't try to correct grammar erorrs, even if you find any.
+     4. Give one line space before each employment.
+     5. IMPORTANT: Don't remove any text content from employment history. if it doesn't fit the NC Style leave it as it is.
+     6. don't use any embedding while generating response, eg: bold, italic.
 
     {resume_content}
 
-    NC style:
+    NC Style:
     <Candidate Name>
     GOVERNMENT EXPERIENCE (Don't add responsibilities here)
-    •	Company Name, City, State	Mon(first three alphabets) YYYY – Mon(first three alphabets) YYYY
+    •	Company Name, City, State	Mon (first three alphabets) YYYY – Mon (first three alphabets) YYYY
 
     CERTIFICATIONS
-    •	Certification 1
-    •	Certification 2
+    List all certificates here
     
     Employment History
-    Company Name, City, State	Mon (first three alphabets) YYYY – Mon (first three alphabets) YYYY
+    End Client Name, City, State	Mon (first three alphabets) YYYY – Mon (first three alphabets) YYYY
     Job Title
-    Project Description:(if any)
-    •	Sample 1
-    Responsibilities:
-    •	Sample 1
-    •	Sample 2
+    Responsibilities(heading)
+    •	Responsibility 1
+    •	Responsibility 2
+    ....
     
     Education
-    •	Degree – University, City, State, Passed out year
+    •	Degree – University, City, State, passed out year
     """
 
     response = query_resume(user_message)
