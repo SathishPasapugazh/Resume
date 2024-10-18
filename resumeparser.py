@@ -2,7 +2,7 @@
 from gemini import GeminiAI
 
 # Initialize GeminiAI model
-model_name = "gemini-1.5-flash"
+model_name = "gemini-1.5-pro-002"
 your_ai = GeminiAI(model_name=model_name)
 
 # Function to process the resume and start the AI conversation
