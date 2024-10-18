@@ -54,6 +54,7 @@ function formatToNC() {
         alert("Please upload a resume first.");
         return;
     }
+    appendMessage("Format Resume", "user");
 
     const file = fileInput.files[0];
     const reader = new FileReader();
@@ -80,6 +81,7 @@ function skillMatrix() {
         alert("Please upload a resume first.");
         return;
     }
+    appendMessage("Skill Matrix", "user");
 
     const file = fileInput.files[0];
     const reader = new FileReader();
@@ -106,6 +108,7 @@ function changeTense() {
         alert("Please upload a resume first.");
         return;
     }
+    appendMessage("Change Past Tense", "user");
 
     const file = fileInput.files[0];
     const reader = new FileReader();
@@ -152,14 +155,24 @@ function sendMessage() {
 }
 
 // Function to append plain text messages to the chat
-function appendMessage(message, type) {
-    const chat = document.getElementById("chat");
-    const messageElem = document.createElement("div");
-    messageElem.classList.add("message");
-    messageElem.classList.add(type === "user" ? "user-message" : "bot-message");
-    messageElem.innerText = message;
-    chat.appendChild(messageElem);
-    chat.scrollTop = chat.scrollHeight;
+function appendMessage(message, sender) {
+    let chatBox = document.getElementById('chat');
+    let messageElem = document.createElement('div');
+    messageElem.classList.add('message');
+
+    // Check the sender and apply the appropriate class
+    if (sender === 'user') {
+        messageElem.classList.add('user');
+    } else if (sender === 'bot') {
+        messageElem.classList.add('bot');
+    }
+
+    let messageText = document.createElement('span');
+    messageText.innerText = message;  // Use innerHTML instead of textContent
+    messageElem.appendChild(messageText);
+
+    chatBox.appendChild(messageElem);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 // Function to append HTML messages (for bot messages) to the chat
