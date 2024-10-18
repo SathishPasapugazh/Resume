@@ -28,4 +28,5 @@ class GeminiAI:
             # Create a generic session if no resume content is available
             self.chat = self.model.start_chat(history=[])  # Initialize with an empty history if no resume
         response = self.chat.send_message(user_input)
+        print(response)
         return response.text
