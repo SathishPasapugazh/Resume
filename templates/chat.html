@@ -9,12 +9,16 @@
 <body>
     <div class="chat-container">
         <h1>Resume Chatbot</h1>
-        
+
         <!-- Form to upload resume -->
         <form id="resumeForm" class="upload-form">
-            <input type="file" id="resumeFile" name="doc" accept=".pdf,.doc,.docx" />
+            <div class="form-group">
+                <label for="resumeFile">Upload Resume:</label>
+                <input type="file" id="resumeFile" name="doc" accept=".pdf,.docx" />
+            </div>
             <div class="button-container">
                 <button type="button" onclick="uploadResume()">Upload Resume</button>
+                <button type="button" onclick="analyse()">Analyse</button>
                 <button type="button" onclick="formatToNC()">Format Resume</button>
                 <button type="button" onclick="changeTense()">Change Past Tense</button>
                 <button type="button" onclick="skillMatrix()">Skill Matrix</button>
