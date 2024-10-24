@@ -129,6 +129,54 @@ function changeTense() {
     reader.readAsText(file);
 }
 
+function analyse() {
+    const fileInput = document.getElementById('resumeFile');
+    if (fileInput.files.length === 0) {
+        alert("Please upload a resume first.");
+        return;
+    }
+    appendMessage("Analyse", "user");
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const resumeText = e.target.result;
+        showLoading();
+        fetch('/analyse', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ resumeText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            appendMessage(data.response, "bot");
+        });
+    };
+    reader.readAsText(file);
+}
+
+
+function switchModel() {
+    const model = document.getElementById("modelSelect").value;
+
+    fetch("/switch_model", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ model_name: model }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.response);
+        alert("Model switched to: " + model);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+}
+
 
 // Function to send a message
 function sendMessage() {
