@@ -13,16 +13,15 @@
         <!-- Form to upload resume -->
         <form id="resumeForm" class="upload-form">
             <div class="form-group">
-                <label for="resumeFile">Upload Resume:</label>
                 <input type="file" id="resumeFile" name="doc" accept=".pdf,.docx" />
+                <button type="button" onclick="uploadResume()">Upload Resume</button>
             </div>
             <div class="button-container">
-                <button type="button" onclick="uploadResume()">Upload Resume</button>
-                <button type="button" onclick="analyse()">Analyse</button>
+                <button type="button" onclick="shortenJd()">Summarize JD</button>
+                <button type="button" onclick="analyse()">Analyse Resume</button>
                 <button type="button" onclick="formatToNC()">Format Resume</button>
                 <button type="button" onclick="changeTense()">Change Past Tense</button>
                 <button type="button" onclick="skillMatrix()">Skill Matrix</button>
-                <button type="button" onclick="shortenJd()">Shorten JD</button>
             </div>
         </form>
 
