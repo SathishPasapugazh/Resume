@@ -1,10 +1,12 @@
 def get_short_jd_prompt():
     return """
-    A job description will be given in the next prompt. Make it clear and concise. 
-    Keep required, desired, preferred skills and certifications.
-    Should not exceed more than 15 lines.
-    Don't use any embedding while generating response, eg: bold, italic.
-    use the below format
+    A job description will be given in the next prompt (You should respond "I'm waiting"). Deeply analyse the jd and answer the below questions. 
+    1. What client wants (bullet points)
+    2. What skills candidate need (bullet points)
+    3. What is candidate going to do (bullet points)
+    4. Short Boolean string (include job title with necessary skills)
+    
+    keep the response clear and concise. Use simple English. Don't use any embedding like bold, italic.
     """
 
 
@@ -13,19 +15,19 @@ def get_change_tense_prompt():
 
 def get_analyse_prompt():
     return """
-    Check the Candidate is genuine.
-    Check responsibilities relevant to job title.
-    Check for inconsistencies in location and timeline, particularly regarding education and employment.
-    give clear and concise response in bullet points. don't give recommendations.
+Analyze the candidate's resume based on the following criteria: 
+1. Check whether the listed responsibilities are relevant to the job title.
+2. Check for inconsistencies in location and timeline, particularly regarding education and employment. 
+3. Check for gaps in employment history. if the previous project ended and next project starts in the same month its not a problem.
+4. Check for evidence of falsification.
     """
 
 
 def get_skill_matrix_prompt():
     return f"""
     A list of skills will be provided wait for the prompt.
-    Calculate the candidate's years of experience for each skill using only the employment history section of the resume.
-    If no experience is found, return 'NA'.
-    Ignore the profile summary and technical skills sections.
+    Calculate the candidate's years of experience for each skill using only the employment history section of the resume. Ignore the profile summary and technical skills sections.
+    If no experience is found, return 'NA'. If skills related to certification response with 'Yes' or 'No'.
     Provide only the years, no explanations."""
 
 
