@@ -11,7 +11,7 @@ class MiniBrowser(QMainWindow):
         self.setGeometry(100, 100, 800, 600)
         
         self.browser = QWebEngineView()
-        self.browser.setUrl(QUrl("https://www.google.com"))
+        self.browser.setUrl(QUrl("https://secure.covendis.com/cov/covendis.htm"))
         self.setCentralWidget(self.browser)
         
         # Navigation bar
