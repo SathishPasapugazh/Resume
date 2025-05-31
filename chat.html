@@ -1,40 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Web Browser</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Chatbot</title>
     <style>
-        #browser-container {
-            width: 800px;
-            margin: 0 auto;
-        }
-        #url-bar {
-            width: 70%;
-            padding: 8px;
-        }
-        button {
-            padding: 8px 12px;
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #chat { margin-bottom: 20px; max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+        .message { margin: 5px 0; padding: 5px; }
+        .user-message { text-align: right; color: blue; }
+        .bot-message { text-align: left; color: green; }
+        input, button { padding: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <div id="browser-container">
-        <h1>Mini Web Browser</h1>
-        <input type="text" id="url-bar" placeholder="https://example.com">
-        <button onclick="navigate()">Go</button>
-        <iframe id="webview" width="100%" height="600px" frameborder="0"></iframe>
+    <h1>Resume Chatbot</h1>
+    
+    <form id="resumeForm">
+        <input type="file" id="resumeFile" name="doc" accept=".pdf,.doc,.docx" />
+        <button type="button" onclick="uploadResume()">Upload Resume</button>
+        <button type="button" onclick="formatToNC()">Format to NC</button> 
+    </form>
+
+    <div id="chat">
+        <!-- Chat messages will be appended here -->
     </div>
+    <input type="text" id="message" placeholder="Ask something about the resume..." style="width: 80%;" />
+    <button onclick="sendMessage()">Send</button>
 
     <script>
-        function navigate() {
-            const url = document.getElementById("url-bar").value;
-            document.getElementById("webview").src = url;
-            
-            // Optional: Send URL to backend (Flask)
-            fetch("/navigate", {
+        function uploadResume() {
+            const formData = new FormData(document.getElementById("resumeForm"));
+            fetch("/upload_resume", {
                 method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `url=${encodeURIComponent(url)}`
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage(data.response, "bot");
             });
+        }
+
+        function formatToNC() {
+            const fileInput = document.getElementById('resumeFile');
+            if (fileInput.files.length === 0) {
+                alert("Please upload a resume first.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const resumeText = e.target.result;
+                fetch('/format_to_nc', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ resumeText })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    appendMessage(data.response, "bot");
+                    // You might want to handle the converted content here, like saving to a file
+                });
+            };
+            reader.readAsText(file);
+        }
+
+        function sendMessage() {
+            const message = document.getElementById("message").value;
+            if (message) {
+                appendMessage(message, "user");
+
+                fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    appendMessage(data.response, "bot");
+                });
+
+                document.getElementById("message").value = "";  // Clear input field
+            }
+        }
+
+        function appendMessage(message, type) {
+            const chat = document.getElementById("chat");
+            const messageElem = document.createElement("div");
+            messageElem.classList.add("message");
+            messageElem.classList.add(type === "user" ? "user-message" : "bot-message");
+            messageElem.innerText = message;
+            chat.appendChild(messageElem);
+            chat.scrollTop = chat.scrollHeight;
         }
     </script>
 </body>
