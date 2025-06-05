@@ -1,11 +1,13 @@
 from flask import Flask, request, render_template, jsonify, session
-from docx import Document
+import docx2txt
 from pypdf import PdfReader
 import os
 import shutil
-import mammoth  # Add this for .doc file support
-from resumeparser import process_resume, query_resume  # Import functions from resumeparser.py
-from gemini import GeminiAI  # Import GeminiAI class
+import mammoth
+from resumeparser import process_resume, query_resume
+from prompts import get_short_jd_prompt, get_change_tense_prompt, get_skill_matrix_prompt, get_format_to_nc_prompt, get_analyse_prompt
+from gemini import GeminiAI
+import json
 
 UPLOAD_PATH = r"__DATA__"
 ARCHIVE_PATH = r"archived"
@@ -33,7 +35,6 @@ def index():
     session.clear()
 
     return render_template('chat.html')  # The main page for the chatbot
-
 
 @app.route("/upload_resume", methods=["POST"])
 def upload_resume():
@@ -63,11 +64,9 @@ def upload_resume():
     if file_extension == 'pdf':
         resume_content = _read_pdf_from_path(file_path)
     elif file_extension == 'docx':
-        resume_content = _read_docx_from_path(file_path)
-    elif file_extension == 'doc':
-        resume_content = _read_doc_from_path(file_path)  # Handle .doc file using mammoth
+        resume_content = docx2txt.process(file_path)
     else:
-        return jsonify({"response": "Unsupported file format. Please upload a PDF, DOC, or DOCX file."}), 400
+        return jsonify({"response": "Unsupported file format. Please upload a PDF or DOCX file."}), 400
 
     # Add the resume content to the resume context list
     resume_context = [{"role": "user", "parts": resume_content}]  # Replace instead of append
@@ -80,8 +79,7 @@ def upload_resume():
 @app.route("/short_jd", methods=["POST"])
 def short_jd():
     print("Short Job Description route accessed!")
-    user_message = f"""
-    A job description will be given in the next prompt. Shorten it as much as possible. Reduce the responsibilities. Keep required, desired, preferred skills and certifications."""
+    user_message = get_short_jd_prompt()
     response = query_resume(user_message)
     return jsonify({"response": response})
 
@@ -101,7 +99,15 @@ def chat():
 def change_tense():
     print("Change Past tense route accessed!")
     global resume_context
-    user_message = "Convert all listed responsibilities to past tense. Do not make any other changes."
+    user_message = get_change_tense_prompt()
+    response = query_resume(user_message)
+    return jsonify({"response": response})
+
+@app.route("/analyse", methods=["POST"])
+def analyse():
+    print("Change analyse route accessed!")
+    global resume_context
+    user_message = get_analyse_prompt()
     response = query_resume(user_message)
     return jsonify({"response": response})
 
@@ -109,19 +115,7 @@ def change_tense():
 def skill_matrix():
     print("Skill Matrix route accessed!")
     global resume_context
-    user_message = f"""
-A list of skills will be provided in the next prompt. Based solely on the resume, calculate the candidate's years of experience for each skill. If the candidate has no experience with a skill, indicate 'NA'. Respond using the following format.
-
-Years of Experience
-Skill 1   Years
-Skill 2   Years
-etc...
-
-Explanation
-Skill 1: Years of experience explanation.
-Skill 2: Years of experience explanation.
-etc...
-"""
+    user_message = get_skill_matrix_prompt()
     response = query_resume(user_message)
     return jsonify({"response": response})
 
@@ -135,36 +129,7 @@ def format_to_nc():
 
     # Check if chat session is initialized
         # Use Gemini AI to format the resume
-    user_message = f"""
-    Please format the following resume content to NC style, while formatting follow the rules below:
-     1. The Government Experience section aims to glimpse the candidate's relevant government experience.
-     2. In the Employment History section, candidates' full experience should be listed in descending chronological order. Including government experience.
-     3. You can rearrange the resume but do not add, remove, or modify any text content. Don't try to correct grammar erorrs, even if you find any.
-
-    {resume_content}
-
-    NC style:
-    <Candidate Name>
-    GOVERNMENT EXPERIENCE (Don't add responsibilities here)
-    •	Company Name, City, State	Mon (first three alphabets) YYYY – Mon (first three alphabets) YYYY
-
-    CERTIFICATIONS
-    •	Certification 1
-    •	Certification 2
-    
-    Employment History
-    Company Name, City, State	Mon (first three alphabets) YYYY – Mon (first three alphabets) YYYY
-    Job Title
-    Project Description:(if any)
-    •	Sample 1
-    Responsibilities:
-    •	Sample 1
-    •	Sample 2
-    Environment/Technologies: tool1, tool2, etc...(if any)
-    
-    Education
-    •	Degree – University, City, State, Year
-    """
+    user_message = get_format_to_nc_prompt(resume_content)
 
     response = query_resume(user_message)
     return jsonify({"response": response})  # Return the response
@@ -190,17 +155,6 @@ def _read_docx_from_path(path):
     except Exception as e:
         print(f"Error reading DOCX file: {e}")
         return "Error reading DOCX file."
-
-
-# Helper function to read DOC files using mammoth
-def _read_doc_from_path(path):
-    try:
-        with open(path, "rb") as doc_file:
-            result = mammoth.convert_to_text(doc_file)  # Converts DOC to plain text
-            return result.value  # Return the extracted text
-    except Exception as e:
-        print(f"Error reading DOC file: {e}")
-        return "Error reading DOC file."
 
 
 # Helper function to move resume to archived folder
